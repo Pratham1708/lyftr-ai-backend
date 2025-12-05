@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lyftr-webhook-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Security - REQUIRED: Set a strong secret key
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-testsecret}
+
+      # Server Configuration
+      - HOST=0.0.0.0
+      - PORT=8000
+
+      # Database
+      - DATABASE_PATH=/data/app.db
+      - DATABASE_URL=sqlite:////data/app.db
+
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FORMAT=${LOG_FORMAT:-json}
+
+      # Pagination
+      - DEFAULT_PAGE_LIMIT=50
+      - MAX_PAGE_LIMIT=100
+
+      # Metrics
+      - ENABLE_METRICS=true
+
+    volumes:
+      # Persist SQLite database
+      - webhook-data:/data
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health/live')" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  webhook-data:
+    driver: local

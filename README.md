@@ -511,6 +511,6 @@ Created for the Lyftr AI Backend Assignment.
 
 ---
 
-**Author:** Submission for Lyftr AI Backend Assignment
-**Date:** January 2025
+**Author:** Pratham Jindal - Submission for Lyftr AI Backend Assignment
+**Date:** December 2025
 **Version:** 1.0.0
